@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type="text/css">
+        .results {
+            margin-top: 2rem;
+        }
+
+        .about,
+        .history {
+            margin-top: 1rem;
+        }
+
+        .near-field .field {
+            margin-left: 1rem
+        }
+
+        .park {
+            margin-bottom: 2rem;
+        }
+
+        .day-select {
+            margin-bottom: 1rem;
+        }
+
+        .time-select {
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <section class="section">
+        <div class="container">
+            <h1 class="title">Chicago Park Search</h1>
+            <form>
+                <div class="field">
+                    <label class="label">Name</label>
+                    <input class="input" type="text" name="name" placeholder="Washington ..." value="{{ args.name }}">
+                </div>
+                <div class="field">
+                    <label class="label">Keyword Search</label>
+                    <input class="input" type="text" name="query_terms" placeholder="e.g. picnic basketball"
+                        value="{{ args.query_terms }}">
+                </div>
+                <div class="field">
+                    <label class="label">Zip Code</label>
+                    <input class="input" type="text" name="zip_code" placeholder="60637" value="{{ args.zip_code }}">
+                </div>
+
+                <div class="day-select field">
+                    <label class="label">Day</label>
+                    <label class="radio"><input type="radio" name="day" value="mon" {% if args.day=="mon" %}checked{%
+                            endif %}>
+                        Monday
+                    </label>
+                    <label class="radio"><input type="radio" name="day" value="tue" {% if args.day=="tue" %}checked{%
+                            endif %}>
+                        Tuesday
+                    </label>
+                    <label class="radio"><input type="radio" name="day" value="wed" {% if args.day=="wed" %}checked{%
+                            endif %}>
+                        Wednesday
+                    </label>
+                    <label class="radio"><input type="radio" name="day" value="thu" {% if args.day=="thu" %}checked{%
+                            endif %}>
+                        Thursday
+                    </label>
+                    <label class="radio"><input type="radio" name="day" value="fri" {% if args.day=="fri" %}checked{%
+                            endif %}>
+                        Friday
+                    </label>
+                    <label class="radio"><input type="radio" name="day" value="sat" {% if args.day=="sat" %}checked{%
+                            endif %}>
+                        Saturday
+                    </label>
+                    <label class="radio"><input type="radio" name="day" value="sun" {% if args.day=="sun" %}checked{%
+                            endif %}>
+                        Sunday
+                    </label>
+                </div>
+
+                <div class="time-select field">
+                    <label class="label">Time</label>
+                    <div class="select">
+                        <select name="time_hour">
+                            <option value=""> --- </option>
+                            <option value="1" {%if args.time_hour=="1" %}selected{% endif %}>1</option>
+                            <option value="2" {%if args.time_hour=="2" %}selected{% endif %}>2</option>
+                            <option value="3" {%if args.time_hour=="3" %}selected{% endif %}>3</option>
+                            <option value="4" {%if args.time_hour=="4" %}selected{% endif %}>4</option>
+                            <option value="5" {%if args.time_hour=="5" %}selected{% endif %}>5</option>
+                            <option value="6" {%if args.time_hour=="6" %}selected{% endif %}>6</option>
+                            <option value="7" {%if args.time_hour=="7" %}selected{% endif %}>7</option>
+                            <option value="8" {%if args.time_hour=="8" %}selected{% endif %}>8</option>
+                            <option value="9" {%if args.time_hour=="9" %}selected{% endif %}>9</option>
+                            <option value="10" {%if args.time_hour=="10" %}selected{% endif %}>10</option>
+                            <option value="11" {%if args.time_hour=="11" %}selected{% endif %}>11</option>
+                            <option value="12" {%if args.time_hour=="12" %}selected{% endif %}>12</option>
+                        </select>
+                    </div>
+                    :
+                    <div class="select">
+                        <select name="time_min">
+                            <option value="00" {% if args.time_min=="00" %}selected{% endif %}>00</option>
+                            <option value="15" {% if args.time_min=="15" %}selected{% endif %}>15</option>
+                            <option value="30" {% if args.time_min=="30" %}selected{% endif %}>30</option>
+                            <option value="45" {% if args.time_min=="45" %}selected{% endif %}>45</option>
+                        </select>
+                    </div>
+                    <div class="select">
+                        <select name="time_ampm">
+                            <option value=""> --- </option>
+                            <option value="am" {% if args.time_ampm=="am" %}selected{% endif %}>am</option>
+                            <option value="pm" {% if args.time_ampm=="pm" %}selected{% endif %}>pm</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="field is-horizontal near-field">
+                    <div class="field">
+                        <label class="label">Latitude</label>
+                        <input class="input" type="text" name="lat" placeholder="41.88" value="{{ args.lat }}">
+                    </div>
+                    <div class="field">
+                        <label class="label">Longitude</label>
+                        <input class="input" type="text" name="lon" placeholder="87.63" value="{{ args.lon }}">
+                    </div>
+                    <div class="field">
+                        <label class="label">Distance (miles)</label>
+                        <input class="input" type="text" name="distance" placeholder="1" value="{{ args.distance }}">
+                    </div>
+                </div>
+
+                <input type="submit" class="button is-primary" value="Search">
+            </form>
+        </div>
+    </section>
+
+
+    <section class="section">
+        {% if errors %}
+        <article class="message is-danger">
+            <div class="message-header">
+                <p>Search Error</p>
+            </div>
+            <div class="message-body">
+                <ul>
+                    {% for error in errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </article>
+        {% endif %}
+
+        <div class="results">
+            <h2 class="title">{{ parks|length }} Results</h2>
+            <h3 class="subtitle"> Params: {{ search_params }} </h3>
+            {% if search_params %}
+            {% for park in parks %}
+            <div class="park card">
+                <header class="card-header">
+                    <h3 class="card-header-title">{{ park.name }}</h3>
+                </header>
+                <div class="card-content">
+                    <div class="content">
+                        <div class="address">
+                            <h4>Address</h4>
+                            {{ park.address }}
+                        </div>
+                        <div class="about">
+                            <h4>About</h4>
+                            {{ park.description }}
+                        </div>
+                        {% if park.history %}
+                        <div class="history">
+                            <h4>History</h4>
+                            {{ park.history }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <footer class="card-footer">
+                    <a class="card-footer-item" href="{{ park.url }}">Source Data</a>
+                    <span class="card-footer-item">
+                        {% if park.day %}
+                        <b>Open {{ park.day|title }}:</b>&nbsp;{{ park.open_time }} - {{ park.close_time }}
+                        {% endif %}
+                    </span>
+                </footer>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </section>
+</body>
+
+</html>
